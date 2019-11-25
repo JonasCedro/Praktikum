@@ -1,0 +1,427 @@
+\documentclass[12pt]{article} 
+
+\usepackage[utf8]{inputenc} 
+
+
+\usepackage[margin=3.3cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[parfill]{parskip} 
+
+
+\usepackage{graphicx} 
+\usepackage{booktabs}
+\usepackage{array} 
+\usepackage{paralist} 
+\usepackage{verbatim} 
+\usepackage{mathtools}
+\usepackage[hidelinks]{hyperref}
+
+\urlstyle{same}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{eurosym}
+\usepackage{listings} 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tablefootnote}
+
+
+\usepackage{fancyhdr} 
+\pagestyle{fancy} 
+\renewcommand{\headrulewidth}{0pt} 
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape}
+
+
+\usepackage[nottoc,notlof,notlot]{tocbibind} 
+\usepackage[titles]{tocloft} 
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} 
+\usepackage{setspace}
+\onehalfspacing
+
+\newtheorem{definition}{Definition}
+\begin{document}
+\newgeometry{margin=2.5cm}
+\begin{titlepage}
+\thispagestyle{empty}
+\newcommand{\HRule}{\rule{\linewidth}{0.6mm}} 
+\center 
+ 
+University of G\"ottingen\\[3cm] 
+ 
+
+\HRule \\[0.3cm]
+\begin{spacing}{1.5}
+{ \LARGE \bfseries copR:\\ Multivariate Probability Distributions with Archimedean Copulas in R}\\
+\end{spacing}
+\HRule \\[1cm]
+
+\large{ Course: Statistical Programming with R}\\[1cm]
+\normalsize
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft}  
+\vspace{1cm}
+\bfseries{Students:} \\
+Alexander Ritz,\\
+Student ID: 21800461 \\
+\vspace{1cm}
+Juliane Wilcke, \\
+Student ID: 21742610 \\
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} 
+\bfseries{Supervisor:} \\
+Rouven Schmidt, M.Sc.\\ 
+\end{flushright}
+\end{minipage}\\[4cm]
+
+\vspace{4,3cm}
+{\large 23.09.2019}\\[4cm] 
+
+\vfill 
+\end{titlepage}
+\restoregeometry
+\clearpage
+\tableofcontents
+\pagenumbering{Roman}
+\clearpage
+\clearpage
+\pagenumbering{arabic}
+\section{Introduction}
+The ability to accurately model multivariate distributions is of utmost importance in countless applications of statistical theory.  Straightforward examples of such applications are the evaluation of financial portfolios or the examination of disease occurence in some population. The random variables of interest are usually collected into a random vector in such cases. Such a random vector then represents the multivariate distribution of interest.\\
+Whenever the distribution of such random vectors is of interest, the dependence structure defining the relationship between the individual random variables becomes a focal point of statistical analysis, and rightfully so. Unfortunately, in the past the construction of multivariate distributions was rather limited. The usual approach of generalising a univariate distribution to multiple dimensions leaves little room for flexibility. In many cases, the individual random variables have to adhere to identical distributions. Even without that particular restriction, oftentimes the form of dependence is similarly restricted [Hofert et al. 2018]. \\
+\newline
+\textit{Copulas} offer a more flexible approach in comparison. Constructing a multivariate probability distribution with the help of copulas opens up the possibility of choosing the marginal distributions and the dependence structure individually. This paper will give a short introduction to the relevant theory relating to a specific class of copulas, so called \textit{Archimedean} copulas, and showcase the R package \textit{copR}. copR offers basic functionality regarding the construction, sampling, visualisation and fitting of Archimedean copulas. The first half of this text will focus on the necessary mathematical concepts, leaving the more intricate details to the appendix, while the latter half will give an overview of copR's functionality and structure. Some more involved details of the implementation are detailed in the appendix.
+\section{Theory of Archimedean Copulas}
+\subsection{What is a Copula?}
+When analysing the joint distribution of several random variables, two concepts are of particular interest: The individual univariate distributions of the involved variables, the margins, and the dependence structure among the margins. The term copula \footnote{From the latin word \textit{copula}, meaning connection.} derives from the fact that the joint distribution and the margins are \textbf{linked} through a copula, the copula taking the place of the isolated dependence structure.  \\
+The following example demonstrates the basic approach of what a copula is supposed to offer the practising statistician. Imagine an arbitrary continuous random vector $\textbf{X}$, with
+\[
+\textbf{X} = (X_1, X_2)\sim F\text{, with }X_1 \sim F_1\text{ and } X_2 \sim F_2
+\]
+An intuitive way to strip this  distribution of any information not immediately related to the dependence structure would be the application of a well known transformation [Hofert et al. 2018].
+\begin{definition}
+The Probability Transformation
+\[
+\text{ If  }X \sim F \text{ and } F \text{ is a continuous cdf, then:} \quad U = F(X) \sim \mathcal{U}(0, 1)\]
+\end{definition}
+
+$ U =  F(X)$ is often called the grade of $X$.\\
+The related Quantile transformation obviously serves as an inversion of the transformation above:
+\begin{definition}
+The Quantile Transformation
+\[ \text{ If  }U \sim \mathcal{U} (0, 1) \text{ and } F \text{ is a cdf, then:} \quad X = F^{-1}(U) \sim F \qquad \quad\quad\]
+\end{definition}
+
+In order to decompose the joint distribution into the marginal distributions and the information on their dependence, the random variables $X_1$ and $X_2$ are transformed into their grades $U_1$ and $U_2$. The resultant joint distibution of the grades can then be interpreted as the dependence structure stripped of the information exclusively relating to the marginals [Meucci 2011].\\
+The following graphs illustrate the approach based on 500 simulated observations of three multivariate normal distributions, each with a different form of dependence.
+\begin{figure}[htbp]
+\centering \includegraphics[height=16cm, width=16cm]{Copulasim.pdf}
+\caption{Copula construction illustrated for positive correlation}
+\label{copsim}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering \includegraphics[height=16cm, width=16cm]{Copulasim3.pdf}
+\caption{Copula construction illustrated for negative correlation}
+\label{copsim}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering \includegraphics[height=16cm, width=16cm]{Copulasim2.pdf}
+\caption{Copula construction illustrated for independence}
+\label{copsim}
+\end{figure}
+
+\subsection{Formal Definition and Sklar's Theorem}
+Following the preceding thoughts, it is only natural to define a copula formally as the joint distribution of the grades. In the bivariate case the properties are easier to parse and interpret than for an arbitrary number of dimensions [Nelsen 2006]:
+\begin{definition}
+A bivariate copula is a function 
+\[C: [0, 1] ^2 \rightarrow [ 0, 1]: \]
+\[(u_1, u_2) \mapsto C(u_1, u_2)\]
+such that:
+\begin{itemize}
+\item{$\forall u \in [0, 1]^2 :\quad C(u_1, 0) = C(0, u_2) = 0$}
+\item{$C(u_1, 1) = u_1$ and $C(1, u_2) = u_2$}
+\item{C is 2-increasing, meaning: $C(u_1, u_2)  - C(u_1, v_2) - C(v_1, u_2) + C(v_1, v_2) \geq 0$, for $v_1 \leq u_1$ and $v_2 \leq u_2$}
+\end{itemize}
+\end{definition}
+It is relatively obvious that the properties ensure that $C$ represents an 2-dimensional cumulative distribution function with unifrom margins. \\
+\newline
+Having defined what a copula is, one question remains unanswered: What is the exact relationship between copula, joint distribution and marginal distributions?
+Equating the different distributions with their respective distribution function and the insights contained in \textit{Sklar's Theorem} offer an answer [Hofert et al. 2018]. 
+\begin{definition}
+The bivariate form of Sklar's Theorem\\
+Let $F_{\textbf{X}}$ be a bivariate joint cdf for the RV $\textbf{X} = (X_1, X_2)$ with marginal cdfs $F_{X_1}$ and $F_{X_2}$. Then there exists a copula C such that:
+
+\[F_{\textbf{X}}(x_1, x_2) = C(F_{X_1}(x_1), F_{X_2}(x_2)) = C(u_1, u_2),\]
+
+with $x_1, x_2 \in \bar{\mathbb{R}}$ and $\bar{\mathbb{R}} := \mathbb{R} \cup \{-\infty, \infty\}$
+\end{definition}
+\vspace{0.5cm}
+Assuming $F_{\textbf{X}}$ and $C$ are differentiable, calculating the joint density in combination with Sklar's Theorem gives [Meucci 2011];[Hofert et al. 2018]:
+\[\frac{\partial^2 F_{\textbf{X}}(x_1, x_2)}{\partial x_1 \partial x_2} = f_{\textbf{X}}(x_1, x_2) = c(F_{X_1}(x_1), F_{X_2}(x_2))f_{X_1}(x_1)f_{X_2}(x_2)\] with \[c(F_{X_1}(x_1), F_{X_2}(x_2)) = \frac{\partial^2 C(F_{X_1}(x_1), F_{X_2}(x_2))}{\partial F_{X_1}(x_1) \partial F_{X_2}(x_2)},\] 
+The copula density can therefore be interpreted as a multiplicative adjustment of the joint density under independence (that is: $f_{X_1}(x_1)f_{X_2}(x_2)$). The concept transfers to higher dimensions in an intuitive and analogous manner.
+
+\subsection{Archimedean Copulas}
+One particular class of copulas that can be considered are Archimedean copulas. A copula $C$ is called an Archimedean copula if it can be written in terms of a continuous generator function $\phi: [0, \infty] \rightarrow [0, 1]$ like so [Hofert et al. 2018]: 
+\[C(u) = \phi (\phi ^{-1}(u_1)+ ... + \phi ^{-1}(u_n)),\]
+with $u \in [0, 1]^n$. \\
+
+The generator function $\phi$ holds the properties:
+
+\begin{itemize}
+\item{$\phi (0) = 1$}
+\item{$\phi (\infty) = 0$}
+\item{$(-1)^k \phi ^{(k)}(t) \geq 0,$ for $k \in \{0, 1, ..., n-2\}, t\in (0, \infty)$}
+\end{itemize}
+Archimedean copulas can be classified in a natural manner based on the form of this generator function. Examples of generators and their corresponding family names are listed in Table 1 [Hofert et al. 2018].
+\begin{table}
+\begin{tabular}{lcr}
+ 
+Family & $\phi(\theta)$ & Parameter space  \\
+\hline
+Clayton & $\phi(t) = (1 + t)^{-\frac{1}{\theta}}$ & $\theta \in (0, \infty)$ \\
+\hline 
+Frank & $\phi(t) = -\log{(1-(1- \exp{(-\theta)})\exp{(-t)})}/\theta$ & $\theta \in (0, \infty)\tablefootnote{$\theta \in \mathbb{R}\backslash 0$ in the bivariate case.}$\\
+\hline
+Gumbel-Hougaard & $\phi(t) = \exp{(-t^{\frac{1}{\theta}})}$ & $\theta \in [1, \infty)$\\
+\hline
+Ali-Mikhail-Haq & $\phi(t) = (1-\theta)/\exp{(t)}-\theta$ & $\theta \in [0, 1)$
+\end{tabular}
+\caption{Examples of Archimedean families and their generating functions.}
+\end{table}
+
+\section{Implementation}
+
+The package \texttt{copR} provides functionality for constructing Archimedean copulas, which can then be sampled from, visualised, and fitted to data. Two families of Archimedean copulas have been implemented, the Clayton copula family and the Frank copula family. The Independence copula\footnote{The Independence copula can be interpreted as an Archimedean copula, albeit without any parameter.} has also been implemented. The package is structured in a way that enables the implementation of further families without unnecessary difficulties.
+
+\subsection{Construction}
+
+The functions \texttt{claycop}, \texttt{frankcop} and \texttt{indcop} can be used to construct a Clayton copula object, a Frank copula object, or an Independence copula object, respectively. The number of dimensions and, unless Independence is chosen, a parameter value need to be supplied. Each constructor function returns a list of the corresponding S3 class, containing the following elements: the number of dimensions, expressions for the generator function and its inverse, the parameter value of the generator function, the upper and lower bounds of permitted parameter values, the name of the copula family, and expressions for the density (pdf) and the distribution function (cdf) of the copula. The Independence copula does not have any parameters and therefore also no paramter bounds. Although possible to define, a generator function has not been implemented for the Independence copula due to a lack of utility.
+
+The expressions for the density and distribution functions are constructed by a call from within the constructor functions to the generic functions \texttt{dcop} and \texttt{pcop}, which have three methods each for the three classes of copula implemented. % (i.e.\ \texttt{dclaycop}, \texttt{dfrankcop}, \texttt{dindcop}; \texttt{pclaycop}, \texttt{pfrankcop}, \texttt{pindcop}). ---INSERT DETAILS ABOUT HOW PDF AND CDF ARE CONSTRUCTED?---
+The three copula classes belong to a common S3 superclass called  \texttt{copula} and inherit the latter's methods for the generic functions \texttt{print} and \texttt{summary}. Whether a given copula object belongs to one of these four classes may be checked with the four corresponding \texttt{is.classname} functions.
+
+\subsection{Sampling}
+
+In order to obtain a random sample from a given Archimedean copula, the copula object and the number of desired observations need to be supplied to the generic function \texttt{rcop}, which also relies on three methods for the types of copula implemented. The sampling of Clayton and Frank copulas is based on the algorithm of Marshall and Olkin (1988) for dimensions higher than 2 and the conditional approach otherwise. % ---INSERT REFERENCE TAG---
+It makes use of an internal function called \texttt{invgeneval} to evaluate the appropriate inverse generator function.
+\texttt{rcop} returns a matrix containing the desired number of observations (rows) of the random variables.
+
+\subsection{Visualisation}
+
+The density and distribution functions of all implemented Archimedean copula types can be visualised in contour plots using the function \texttt{coptourplot} and in three-dimensional perspective plots using the function \texttt{coppersplot}. Common code for constructing the xy-grid and evaluating the function of interest at each point of the grid has been moved to the internal function \texttt{zofgrid}. While reasonable defaults have been chosen, a large number of plotting options can be adjusted by the user, including the colour palette for contours and facets, which may be chosen to take colour blindness into account or to be optimised for grayscale printing.
+
+\subsection{Fitting}
+
+Given an Archimedean copula object along with data, the function \texttt{cloglik} computes the value of the log-likelihood function using the aforementioned function \texttt{dcop} for the density. The function gives the option of supplying a parameter value differing from the parameter of the supplied copula. Using the function \texttt{cfit}, the copula parameter can be fit to the data by determining the maximum of the log-likelihood function computed by \texttt{cloglik}. \texttt{cfit} returns a list of the S3 class \texttt{fitcop}, which inherits the class of the supplied copula object and has identical elements to the original object, with three exceptions: The original parameter value gets replaced by the maximum likelihood estimate, and two additional elements contain the maximum value of the log-likelihood and the number of observations that were used, respectively. For model selection purposes, both the AIC and BIC have been implemented to be applied to a \texttt{fitcop} object. The functions are called \texttt{c\_aic } and \texttt{c\_bic }.
+
+The parameter of a given bivariate Archimedean copula can also be fitted to the data using the method of moments, in this case based on Kendall's tau. The wrapper function \texttt{corken} computes all pairwise Kendall rank correlation coefficients between the variables of a given data set. A fast option is available for large data sets without missing values. If Kendall's tau is supplied to the function \texttt{cmethmo}, along with a copula object, that tau is used to estimate the new parameter. Alternatively a data set can be supplied to calculate Kendall's tau. \texttt{cmethmo} returns a copula object with the parameter determined by the inversion of Kendall's tau.
+
+\section{Usage}
+
+For a start, the package \texttt{copR} is installed from GitHub und loaded. Note that the package was created in R version 3.6.0 and, importantly, has no dependencies other than the \texttt{base} package and three packages loaded on startup by default (i.e.\ \texttt{grDevices}, \texttt{graphics}, \texttt{stats}).
+<<eval = FALSE>>=
+if (!require(devtools))
+  install.packages(devtools)
+devtools::install_github("AlexanderRitz/copR")
+library(copR)
+@
+<<eval = TRUE, echo = FALSE>>=
+library(copR)
+@
+
+\subsection{Construction}
+
+Using \texttt{copR} one can now construct Archimedean copulas of type Clayton, Frank, and Independence in, for example, two dimensions.
+<<>>=
+ccop2 <- claycop(par = 5, dim = 2)
+fcop2 <- frankcop(par = 3, dim = 2)
+icop2 <- indcop(dim = 2)
+@
+
+Printing and summary methods enable the viewer to get an overview of a copula.
+<<>>=
+ccop2
+summary(ccop2)
+@
+
+\subsection{Sampling}
+
+One may want to create a random sample with 1000 data points from the contructed Frank copula and plot it.
+<<plot21, fig.height = 3.8, fig.width = 3.8, fig.pos = "H", fig.align="center">>=
+set.seed(239)
+U2 <- rcop(copula = fcop2, n = 1000)
+plot(U2, asp = 1, xlab = quote(U[1]), ylab = quote(U[2]),
+     main = "Random sample from Frank Copula", cex.main = 1)
+@
+
+If one assumes that the first marginal is normally distributed and the second one exponentially, one can quantile transform the sample and plot its multivariate distribution.
+<<plot22, fig.height = 3.8, fig.width = 3.8, fig.pos = "H", fig.align="center">>=
+X_1 <- qnorm(U2[, 1], 0, 1)
+X_2 <- qexp(U2[, 2], 1)
+plot(X_1, X_2, asp = 1, xlab = quote(X[1]), ylab = quote(X[2]),
+     main = "Multivariate distribution of random sample",
+     cex.main = 1)
+@
+
+One may also look at copulas of higher dimensions, say 5D, and examine the dependence structure of the marginals among each other.
+<<plot23, fig.height = 6.5, fig.width = 6.5, fig.pos = "H", fig.align="center">>=
+ccop5 <- claycop(par = 4, dim = 5)
+U5 <- rcop(copula = ccop5, n = 100)
+U5 <- as.data.frame(U5)
+pairs(~ V1 + V2 + V2 + V3 + V4 + V5, data = U5, main =
+      "Dependence of sampled 5D Clayton Copula")
+@
+
+Again, one can consider what happens when the distribution of the first variable is transformed into a normally distributed variable.
+<<plot24, fig.height = 6.5, fig.width = 6.5, fig.pos = "H", fig.align="center">>=
+U5$V1 <- qnorm(U5$V1, mean = 5, sd = 10)
+pairs(~ V1 + V2 + V2 + V3 + V4 + V5, data = U5,
+      main = paste("Bivariate distributions with normally",
+                   "distributed marginal V1", sep = " "))
+@
+
+\subsection{Visualisation}
+
+The density and distribution function of a constructed bivariate copula object may be plotted in two or three dimensions. Consider the density of the 2D Clayton copula as an illustration how some of the display options can be adjusted :
+<<plot31, fig.height = 4, fig.width = 4, fig.pos = "H", fig.align="center">>=
+coptourplot(copula = ccop2, FUN = "pdf", n.grid = 36, nlevels = 30,
+             col.pal = "SunsetDark", con.lines = FALSE)
+@
+
+<<plot32, fig.height = 4.2, fig.width = 4.2, fig.pos = "H", fig.align="center">>=
+coppersplot(copula = ccop2, FUN = "pdf", n.grid = 36, delta= 0.1,
+             theta = -30, col.pal = "Plasma", border = NULL)
+@
+
+Going with the preset options to visualise the distributon function:
+
+<<plot33, fig.height = 4, fig.width = 4, fig.pos = "H", fig.align="center">>=
+coptourplot(copula = ccop2, FUN = "cdf")
+coppersplot(copula = ccop2, FUN = "cdf")
+@
+
+\subsection{Fitting}
+
+Given some data, one may calculate the value of the log-likelihood function associated with a Clayton copula.
+<<>>=
+U <- matrix(c(0.7026, 0.6359, 0.4116, 0.8833, 0.3127, 0.4035),
+            nrow = 3, byrow = TRUE)
+cloglik(copula = ccop2, data = U)
+@
+
+The output of the \texttt{cfit} function gives the maximum likelihood estimate of the parameter value ("theta") und also the maximum value of the log-likelihood function ("maximum").
+<<>>=
+cfit(copula = ccop2, data = U)
+@
+
+Finally, estimating the parameter of a copula based on the inversion of Kendall's tau given some data:
+<<>>=
+cmethmo(copula = ccop2, data = U)
+@
+
+
+\appendix
+\section{Appendix}
+\subsection{General copula definition}
+Compare [Nelsen 2006]
+\begin{definition}
+A copula is a function 
+\[C: [0, 1] ^n \rightarrow [ 0, 1]: \]
+\[(u_1, ..., u_n) \mapsto C(u_1, ..., u_n),\]
+such that:
+\begin{itemize}
+\item{$\forall u \in [0, 1]^n : \quad\exists u_j = 0 :\quad C(u) = 0,\quad j= 1, ..., n$}
+\item{$\forall u_j: \qquad C(1, ..., u_j, ..., 1) = u_j \quad(\text{that is: }(u_1, ..., u_{j-1}, u_{j+1}, ... u_n = 1)$}
+\item{C is n-increasing} 
+\end{itemize}
+\end{definition}
+
+\subsubsection{n-inreasing functions}
+Compare [Nelsen 2006]
+\begin{definition}
+A function $C: [0, 1]^n \rightarrow [0, 1]$ is n-increasing if for any hyper-rectangle \[R = \prod_{i=1}^{n} [x_i, y_i] \subseteq [0, 1]^n\]
+the C-measure / C-volume is non-negative:
+\[V_{C}(R) \geq 0\]
+\end{definition}
+
+\subsubsection{Fréchet-Hoeffding bounds}
+Compare [Nelsen 2006]
+\begin{definition}
+For a bivariate copula, the following bounds are called the Fréchet-Hoeffding bounds:
+\begin{align}
+max(u_1 + u_2 - 1, 0)  &\leq C(u_1, u_2) \leq min(u_1, u_2)
+\end{align}
+\end{definition}
+The upper bound is always (not just in the bivariate case) a copula itself. The lower boundary only in the case of two variables.
+
+
+
+\subsection{Properties of Archimedean copulas}
+The class of Archimedean copulas is an associative class of copulas, i.e.:
+
+\begin{definition}
+\[C(C(u_1, u_2), u_3) = C(u_1, C(u_2, u_3))\]
+\end{definition}
+
+The class of Archimedean copulas is a permutation-symmetric class of copulas, i.e.:
+\begin{definition}
+\[C(u_1, u_2, u_3) = C(u_3, u_2, u_1)\]
+\end{definition}
+
+\subsection{Details of implementation}
+\subsubsection{Sampling algorithms}
+The following paragraphs give a short overview of the algorithms used to simulate copula samples within copR.
+
+A d-dimensional Clayton copula is sampled by utilising the Marshall-Olkin algorithm for Archimedean copulas generated by completely monotone $\phi$ [Marshall and Olkin 1988];[Hofert et al. 2018].
+The algorithm involves four steps:
+\begin{itemize}
+\item{Simulate d independent uniform variable $u_i$ for $ i = 1, ...,d$}
+\item{Simulate a variable Y which is Gamma distributed with parameters $(\frac{1}{\theta}, 1)$}
+\item{Calculate $s_i = \frac{-ln(u_i)}{Y}$ for $i = 1, ..., d$}
+\item{Then $X_i = \phi ^{-1}(s_i)$ is a realization of a Clayton copula.}
+\end{itemize}
+
+A 2-dimensional Frank copula is sampled with the conditional approach [compare Hofert et al. 2018 and Whelan 2004].
+A d-dimensional Frank copula can be sampled analogously to the Clayton. Although one has to simulate a Logarithmic distribution in the second step insted of Gamma. This is achieved by \textit{Kemp’s second accelerated generator} (Devroye 1986, p. 548)
+
+The independence copula can be trivially implemented with the help of \textit{runif}.
+
+
+\subsection{Estimation}
+Maximum likelihood estimation is implemented in a framework equivalent to [Hofert et al. 2012], while the method of moments is implemented based on the relationships between Kendall's tau and the copula parameter theta as they are found in [Frees \& Valdez 1998]. In the case of the Frank copula this relationship involves the Debye function [Genest 1987], which has therefore been implemented for order 1.
+
+\clearpage
+\begin{thebibliography}{xxxxxxxxxxxxxxxxxxxxxxxxx}
+
+\bibitem[Devroye 1986]{D} Devroye, Luc :Non-Uniform Random Variate Generation. Springer 1986
+
+\bibitem[Frees \& Valdez 1998]{F} Fres, Edward W.; Valdez, Emiliano A. : Understanding Relationships Using Copulas. North American Actuarial Journal 2(1):1-25.
+
+\bibitem[Genest 1987]{G} Genest, Christian. : Frank's Family of Bivariate Distributions. Biometrika, Vol. 74, No. 3, pp. 549-555
+
+\bibitem[Hofert et al. 2018]{H} Hofert, Marius; Kojadinovic, Ivan; Mächler, Martin; Jun, Yan. : Elements of Copula Modeling with R. Springer 2018
+
+\bibitem[Hofert et al. 2012]{H} Hofert, Marius; Mächler, Martin; McNeil, Alexander J.. : Likelihood inference for Archimedean copulas in high dimensions under known margins. Journal of Multivariate Analysis 110 (2012) 133–150
+
+\bibitem[Marshall \& Olkin 1988]{Ma} Marshall, Albert W.; Olkin, Ingram : Families of Multivariate Distributions. In: Journal of the American Statistical Association, Vol. 83, No. 403, pp.834-841
+
+\bibitem[Meucci 2011]{Me} Meucci, Attilio : Short, Comprehensive, Practical Guide to Copulas. GARP Risk Professional, October 2011, p. 22-27
+
+\bibitem[Nelsen 2006]{N} Nelsen, Roger B. : An Introduction to Copulas. Second Edition. Springer 2006
+
+\bibitem[Whelan 2004]{W} Whelan, Niall : Sampling from Archimedean copulas. Quantitative Finance, Volume 4, Issue 3, pp. 339-352 (2004)
+
+\end{thebibliography}
+\end{document}
