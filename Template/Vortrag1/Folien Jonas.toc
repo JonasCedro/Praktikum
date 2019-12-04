@@ -1,4 +1,0 @@
-\beamer@sectionintoc {1}{Grundbegriffe}{3}{0}{1}
-\beamer@sectionintoc {2}{Gepaarter \textit {t}-Test}{12}{0}{2}
-\beamer@sectionintoc {3}{Zweistichproben-\textit {t}-Test}{18}{0}{3}
-\beamer@sectionintoc {4}{Literatur}{21}{0}{4}

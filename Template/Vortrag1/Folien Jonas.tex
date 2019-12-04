@@ -11,7 +11,7 @@
 \usepackage[utf8]{inputenc} 
 \usepackage[T1]{fontenc} 
 \usepackage{lmodern} 
-\usepackage{ngerman}
+\usepackage[english,ngerman]{babel}
 \usepackage{amsmath}
 \usepackage{eurosym}
 \usepackage{glossaries-extra}
@@ -49,23 +49,20 @@ Georg-August-Universität Göttingen \\ % Your institution for the title page
 %------------------------------------------------
 \frame{\sectionpage}
 
-
-\begin{frame}
-\frametitle{Validität vs. Trennschärfe eines Tests}
-
-\end{frame}
-
 \begin{frame}
 \frametitle{Störfaktoren}
-\begin{exampleblock}{Störfaktor:}
-Ein Störfaktor (z. B. Bodenart) ist ein Faktor, welcher sowohl die abhängige Variable (z. B. Dünger) als auch die unabhängige Variable (z. B. Ertrag) beeinflussen könnte und nicht manipuliert werden kann. Störfaktoren können Merkmale von Untersuchungseinheiten oder äußere Faktoren sein. Störfaktoren sind als alternative oder konkurrierende Erklärungen zur Ausgangshypothese des Forschungsproblems zu sehen. Zur Kontrolle von Störfaktoren kann paarweise Zuordnung (Matching), oder Randomisierung angewandt werden.
-\end{exampleblock}
+\begin{itemize}
+\item Störfaktor: Ein Faktor (z. B. Bodenart), welcher sowohl die abhängige Variable (z. B. Dünger) als auch die unabhängige Variable (z. B. Ertrag) beeinflussen könnte und nicht manipuliert werden kann
+\item Können Merkmale von Untersuchungseinheiten oder äußere Faktoren sein
+\item Störfaktoren sind als alternative oder konkurrierende Erklärungen zur Ausgangshypothese des Forschungsproblems zu sehen
+\item Zur Kontrolle von Störfaktoren kann paarweise Zuordnung (Matching), oder Randomisierung verwenden
+\end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Blockbildung}
 \begin{itemize}
-\item Sind die Versuchseinheiten sehr unterschiedlich, dann wird die Isolierung interessierender Effekte (z. B. Ertrag einer Nutzpflanze) durch die Heterogenität des Materials (z. B. Bodenart) erschwert
+\item Sind die Untersuchungseinheiten sehr unterschiedlich, dann wird die Isolierung interessierender Effekte (z. B. Ertrag einer Nutzpflanze) durch die Heterogenität des Materials (z. B. Bodenart) erschwert
 \item Es empfiehlt sich Untergruppen von Untersuchungseinheiten zu bilden, die in sich gleichförmiger sind als das gesamte Material $\Rightarrow$ sog. \textit{homogene Versuchsblöcke}
 \end{itemize}
 \begin{exampleblock}{Blockbildung:}
@@ -75,23 +72,36 @@ Die Bildung von Blöcken homogener Untersuchungseinheiten wird \textit{Blockbild
 
 \begin{frame}
 \frametitle{Randomisierung}
-\begin{exampleblock}{Randomisierung (Zufallszuteilung):}
-Unter Verwendung eines Zufallsmechanismus werden Untersuchungseinheiten unterschiedlichen Gruppen zugeordnet. Ziel ist das gleichmäßige verteilen bekannter und unbekannter an die Untersuchungseinheiten gebundene Störfaktoren auf Experimental- und Kontrollgruppe. Die Randomisierung soll die Zufälligkeit der Stichprobe im Sinne der mathematischen Statistik garantieren, entsprechend der Auswahl einer Zufallsstichprobe.
-\end{exampleblock}
+Randomisierung (Zufallszuteilung):
+\begin{itemize}
+\item Unter Verwendung eines Zufallsmechanismus werden Untersuchungseinheiten unterschiedlichen Gruppen zugeordnet
+\item Ziele:
+\begin{itemize}
+\item Das gleichmäßige verteilen bekannter und unbekannter an die Untersuchungseinheiten gebundene Störfaktoren auf Experimental- und Kontrollgruppe
+\item Die Zufälligkeit der Stichprobe im Sinne der mathematischen Statistik soll garantiert werden, entsprechend der Auswahl einer Zufallsstichprobe
+\end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Prinzipien der Versuchsplanung: Blockbildung und Randomisierung}
-Die Blockbildung und die Randomisierung sind zwei der drei Prinzipien der Versuchsplanung.\footnote{Das Dritte Prinzip, die Wiederholung ist hier nicht relevant}. Beide dienen dazu, für alle anderen Einflussgrößen zu kontrollieren, sie also konstant zu halten.
+Die Blockbildung und die Randomisierung sind zwei der drei Prinzipien der Versuchsplanung. Beide dienen dazu, für alle anderen Einflussgrößen zu kontrollieren, sie also konstant zu halten.
+\begin{figure}
 \includegraphics[scale=0.4]{/Users/jonascedrodelgado/Desktop/Practical/Praktikum/Template/Vortrag1/Blockbildung.png}
-\caption{figure}{Diese Abbildung zeigt die Versuchsplanung für den Vergleich zweier Behandlungen: Sich unterscheidende Untersuchungseinheiten werden durch lokale Kontrolle (Blockbildung) getrennt erfasst und nach Zufallszuteilung (Randomisierung) zwei zu vergleichenden Einﬂüssen, Behandlungen (A und B), ausgesetzt. Quelle: Lothar Sachs, Jürgen Hedderich (2018).}
+\caption{Diese Abbildung zeigt die Versuchsplanung für den Vergleich zweier Behandlungen: Sich unterscheidende Untersuchungseinheiten werden durch lokale Kontrolle (Blockbildung) getrennt erfasst und nach Zufallszuteilung (Randomisierung) zwei zu vergleichenden Einflüssen, Behandlungen (A und B), ausgesetzt. Quelle: Lothar Sachs, Jürgen Hedderich (2018).}
+\end{figure}
 \end{frame}
 
 \begin{frame}
 \frametitle{Paarweise verbundener Versuchsplan}
 
 \begin{exampleblock}{Paarweise verbundener Versuchsplan:}
-Ein \textit{paarweise verbundener Versuchsplan} (paarweise verbundenes Design) ist ein Spezialfall eines \textit{randomisierten Blockversuchsplans} (randomisiertes Blockdesign). Ein paarweise verbundener Versuchsplan kann verwendet werden, wenn das Experiment nur zwei Behandlungsbedingungen hat und die Untersuchungseinheiten basierend auf einer Blockbildungsvariable in Paare zusammengefasst werden können. Die Untersuchungseinheiten werden dann innerhalb jedes Paares unterschiedlichen Behandlungsarten zufallszugeteilt (sog. Randomisierung)
+Ein \textit{paarweise verbundener Versuchsplan} (paarweise verbundenes Design):
+\begin{itemize}
+\item Spezialfall eines \textit{randomisierten Blockversuchsplans}
+\item kann verwendet werden, wenn das Experiment nur zwei Behandlungsbedingungen hat und die Untersuchungseinheiten basierend auf einer Blockbildungsvariable in Paare zusammengefasst werden können
+\item Die Untersuchungseinheiten werden dann innerhalb jedes Paares unterschiedlichen Behandlungsarten zufallszugeteilt (sog. Randomisierung)
+\end{itemize}
 \end{exampleblock}
 \end{frame}
 
@@ -104,9 +114,13 @@ Bei einer medizinischen Studie mit 1000 Versuchsteilnehmern bekommen alle Versuc
 
 \begin{frame}
 \frametitle{Verbundene Stichproben}
-Im verbundenen Zweistichprobenproblem werden bei jeder Untersuchungseinheit beide Verfahren betrachtet. Die Daten fallen also paarweise an. Es sei $x_{i}$ der Wert, der bei der $i$-ten Untersuchungseinheit beim ersten Verfahren beobachtet wird (z. B. Gabe eines spezifischen Düngers) und $y_{i}$ der Wert, der bei der $i$-ten Untersuchungseinheit beim zweiten Verfahren beobachten wird. Bei der $i$-ten Untersuchungseinheit wird also das Paar $(x_{i},y_{i})$ beobachtet (Realisierung der zweidimensionale Zufallsvariablen $(X_{i},Y_{i})$. Es soll überprüft werden, ob sich die beiden Verfahren unterscheiden. Besteht kein Unterschied zwischen den beiden Verfahren, sollte
-
- \[\operatorname{E}(X_{i}) = \operatorname{E}(Y_{i})\] bzw.  \[\operatorname{E}(D_{i}) =  \operatorname{E}(X_{i} - Y_{i}) = \operatorname{E}(X_{i}) -\operatorname{E}(Y_{i}) = 0\,.\] (Die Verteilung der Differenzen $D_{i}$ sollte das Zentrum null besitzen)
+\begin{itemize}
+\item bei jeder Untersuchungseinheit beide Verfahren betrachtet. Die Daten fallen also paarweise an
+\item Es sei $x_{i}$ der Wert, der bei der $i$-ten Untersuchungseinheit beim ersten Verfahren beobachtet wird (z. B. Gabe eines spezifischen Düngers) und $y_{i}$ der Wert, der bei der $i$-ten Untersuchungseinheit beim zweiten Verfahren beobachten wird
+\item Bei der $i$-ten Untersuchungseinheit wird also das Paar $(x_{i},y_{i})$ beobachtet (Realisierung der zweidimensionale Zufallsvariablen $(X_{i},Y_{i})$
+\item Es soll überprüft werden, ob sich die beiden Verfahren unterscheiden. Besteht kein Unterschied zwischen den beiden Verfahren, sollte
+\end{itemize}
+ \[\operatorname{E}(X_{i}) = \operatorname{E}(Y_{i})\] bzw.  \[\operatorname{E}(D_{i}) =  \operatorname{E}(X_{i} - Y_{i}) = \operatorname{E}(X_{i}) -\operatorname{E}(Y_{i}) = 0\,.\]
  
 gelten
 
@@ -131,7 +145,7 @@ Seien $x_1, x_2, \dots, x_n$ und $y_1, y_2, \dots, y_n$ zwei verbundene Stichpro
 
 Für die Konstruktion der Teststatistik nutzt man aus, dass sich eine \textit{t}-verteilte Zufallsvariable aus der Division einer standardnormalverteilten Zufallsvariable durch die Quadratwurzel einer (um die Anzahl ihrer Freiheitsgrade korrigierten) Chi-Quadrat-verteilten Zufallsvariablen ergibt, d. h. 
 
-\[t_n\equiv\frac{\mathcal{N}(0,1)}{\sqrt{\chi_n^2/n}}\,.\]
+\[t_n\equiv\frac{Z}{\sqrt{X/n}}\,, \; \text{wobei} \; Z\;  \sim \;\mathcal{N}(0,1)\; \text{und} \; X\;  \sim \; \chi^2(n)\]
 
 Die Testatistik für den gepaarten \textit{t}-Test ist gegeben durch:
 \[ T=\sqrt{n}\frac{\overline{D}-d_0}{S_D}  \; \stackrel{H_0}{\sim} \; t_{n-1}\,,\]
@@ -177,7 +191,7 @@ mit den dazugehörigen Ablehnkriterien und Ablehnbereichen $A$:
 \frame{\sectionpage}
 \begin{frame}
 \frametitle{Zweistichproben-\textit{t}-Test (unverbundene Stichproben)}
-Seien $X_1, X_2, \dots, X_n  \; \stackrel{\mathrm{u.i.v.}}{\sim} \; \mathcal{N}(\mu_{x}, \sigma_{x}^2)$ und $Y_1, Y_2, \dots, Y_m  \; \stackrel{\mathrm{u.i.v.}}{\sim} \; \mathcal{N}(\mu_{y}, \sigma_{y}^2)$ zwei unabhängige Zufallsstichproben. Es sei zunächst angenommen, dass $\sigma_{x} = \sigma_{y} = \sigma^2$. Dann gilt $X_{i} -Y_{i}  \; \stackrel{H_0}{\sim} \; \mathcal{N}(\mu_{x} -\mu{y}, 2\sigma^2)$ Da $\overline{X}\; \sim \;\mathcal{N}(\mu_{x}, \sigma^2/n) $ und $\overline{Y}\; \sim \;\mathcal{N}(\mu_{y}, \sigma^2/m) $ geeignete Schätzer für $\mu_{x}$ und $\mu_{y}$ sind und da $\overline{X} -\overline{Y}\; \sim \;\mathcal{N}(\mu_{x}-\mu{y},\sigma^2/n + \sigma^2/m) $ ist die Teststatistik gegeben durch:
+Seien $X_1, X_2, \dots, X_n  \; \stackrel{\mathrm{u.i.v.}}{\sim} \; \mathcal{N}(\mu_{x}, \sigma_{x}^2)$ und $Y_1, Y_2, \dots, Y_m  \; \stackrel{\mathrm{u.i.v.}}{\sim} \; \mathcal{N}(\mu_{y}, \sigma_{y}^2)$ zwei unabhängige Zufallsstichproben. Es sei zunächst angenommen, dass $\sigma^2_{x} = \sigma^2_{y} = \sigma^2$. Dann gilt $X_{i} -Y_{i}  \; \stackrel{H_0}{\sim} \; \mathcal{N}(\mu_{x} -\mu{y}, 2\sigma^2)$ Da $\overline{X}\; \sim \;\mathcal{N}(\mu_{x}, \sigma^2/n) $ und $\overline{Y}\; \sim \;\mathcal{N}(\mu_{y}, \sigma^2/m) $ geeignete Schätzer für $\mu_{x}$ und $\mu_{y}$ sind und da $\overline{X} -\overline{Y}\; \sim \;\mathcal{N}(\mu_{x}-\mu{y},\sigma^2/n + \sigma^2/m) $ ist die Teststatistik gegeben durch:
 
 \[T=\frac{\overline{X}-\overline{Y} - (\mu_{x}-\mu_{y})}{S_{p}\sqrt{\frac{1}{n}+\frac{1}{m}}}  \; \stackrel{H_0}{\sim} \; t_{n+m-2}\]
 
